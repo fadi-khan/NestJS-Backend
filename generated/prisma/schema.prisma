@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int        @id @default(autoincrement())
+  name           String
+  password       String
+  isAdmin        Boolean    @default(false)
+  isActive       Boolean    @default(true)
+  empId          String
+  email          String     @unique
+  contactNo      String
+  gender         Gender
+  address        String
+  jobTitle       String
+  joiningDate    DateTime   @db.Date
+  department     Department
+  dob            DateTime   @db.Date
+  employeType    EmpType
+  profilePicture String?
+  salary         Float
+  bankName       String
+  bankNo         String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  Leave Leave[]
+}
+
+model Leave {
+  id        Int      @id @default(autoincrement())
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  reason    String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  status    Status   @default(PENDING)
+}
+
+enum Status {
+  REJECTED
+  PENDING
+  ACCEPTED
+}
+
+enum EmpType {
+  GENERAL
+  ADMIN
+  MANAGER
+}
+
+enum Department {
+  HR
+  IT
+  RESEARCH
+  OPEARTIONS
+  SUPPORT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
