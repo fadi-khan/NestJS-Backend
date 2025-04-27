@@ -25,7 +25,7 @@ export class AuthService {
 
 
         } catch (error) {
-            throw new UnauthorizedException('Authentication failed');
+            throw new UnauthorizedException("Username or Password is incorrect ");
         }
     }
 }

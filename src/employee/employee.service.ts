@@ -1,4 +1,10 @@
-import {Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
+import {
+    BadGatewayException,
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    NotFoundException
+} from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import {DatabaseService} from "../database/database.service";
@@ -28,6 +34,8 @@ export class EmployeeService {
 
     const user = await this.dbService.user.findFirst({where: {id: id}})
 
+
+
      if (!user) {
        throw new NotFoundException("User not found");
      }
@@ -36,7 +44,16 @@ export class EmployeeService {
   }
 
  async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    const user =await this.dbService.user.update({data:updateEmployeeDto , where: {id: id}})
+
+
+      const user =await this.dbService.user.update({data:updateEmployeeDto , where: {id: id}})
+
+
+      const validateEmail = await this.findUserByEmail(updateEmployeeDto?.email);
+
+      if (validateEmail.email == updateEmployeeDto.email && validateEmail.id != id) {
+          throw new ConflictException("This email is already taken" )
+      }
 
     if (!user){
       throw new NotFoundException('User not found')
@@ -49,7 +66,7 @@ export class EmployeeService {
     return this.dbService.user.delete({where: {id: id}});
   }
 
- async findUserByEmail(email: string  ) {
+ async findUserByEmail(email  ) {
 
      const user =await this.dbService.user.findFirst({ where: { email } });
 
@@ -59,6 +76,8 @@ export class EmployeeService {
      return user;
 
   }
+
+
 
  async findEmployeeLeaves(id: number) {
     return this.dbService.user.findUnique({

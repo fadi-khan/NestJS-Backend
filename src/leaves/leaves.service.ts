@@ -14,7 +14,7 @@ export class LeavesService {
   }
 
   findAll() {
-    return this.dbService.leave.findMany();
+    return this.dbService.leave.findMany({include:{user:true}} );
   }
 
   findOne(id: number) {
