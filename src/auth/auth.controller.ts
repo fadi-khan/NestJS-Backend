@@ -8,8 +8,6 @@ import {Request} from "express";
 export class AuthController {
 
 
-constructor(private authService: AuthService){}
-
     @UseGuards(AuthGuard('local'))
     @Post('login')
     login(@Req() req:Request){
