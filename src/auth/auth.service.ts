@@ -14,6 +14,7 @@ export class AuthService {
 
 
 
+            console.log(user);
 
             const isPasswordValid = password === user.password;
 
