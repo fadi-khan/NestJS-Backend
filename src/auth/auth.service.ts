@@ -13,6 +13,9 @@ export class AuthService {
             const user = await this.db.findUserByEmail(email);
 
 
+
+            console.log(user);
+
             const isPasswordValid = password === user.password;
 
 
